@@ -2,10 +2,11 @@ package de.spinscale.restclient;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class Page<T> {
 
-    public static final Page EMPTY = new Page(Collections.emptyList(), null, 0, 0);
+    private static final Page<?> EMPTY = new Page<>(Collections.emptyList(), null, 0, 0);
 
     private final List<T> products;
     private final String input;
@@ -21,6 +22,12 @@ public class Page<T> {
 
     List<T> get() {
         return Collections.unmodifiableList(products);
+    }
+
+    public static<TT> Page<TT> empty() {
+        @SuppressWarnings("unchecked")
+        Page<TT> t = (Page<TT>) EMPTY;
+        return t;
     }
 
     public String getInput() {

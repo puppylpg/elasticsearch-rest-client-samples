@@ -26,42 +26,54 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(String id) throws IOException {
         final GetResponse<Product> getResponse = client.get(builder -> builder.index(index).id(id), Product.class);
-        Product product = getResponse.source();
-        product.setId(id);
-        return product;
+        return getResponse.source();
     }
 
     @Override
     public Page<Product> search(String input) throws IOException {
-        return createPage(createSearchRequest(input, 0, 10), input);
+        return getPageResult(createSearchRequest(input, 0, 10), input);
     }
 
     @Override
-    public Page<Product> next(Page page) throws IOException {
+    public Page<Product> next(Page<Product> page) throws IOException {
         int from = page.getFrom() + page.getSize();
         final SearchRequest request = createSearchRequest(page.getInput(), from, page.getSize());
-        return createPage(request, page.getInput());
+        return getPageResult(request, page.getInput());
     }
 
-    private Page<Product> createPage(SearchRequest searchRequest, String input) throws IOException {
+    private Page<Product> getPageResult(SearchRequest searchRequest, String input) throws IOException {
         final SearchResponse<Product> response = client.search(searchRequest, Product.class);
         if (response.hits().total().value() == 0) {
-            return Page.EMPTY;
+            return Page.empty();
         }
         if (response.hits().hits().isEmpty()) {
-            return Page.EMPTY;
+            return Page.empty();
         }
 
-        response.hits().hits().forEach(hit -> hit.source().setId(hit.id()));
         final List<Product> products = response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
-        return new Page(products, input, searchRequest.from(), searchRequest.size());
+        return new Page<>(products, input, searchRequest.from(), searchRequest.size());
     }
 
     private SearchRequest createSearchRequest(String input, int from, int size) {
+        String comment = """
+                GET /_search
+                {
+                  "query": {
+                    "multi_match" : {
+                      "query":    "this is a test",
+                      "fields": [ "name", "description" ]
+                    }
+                  }
+                }
+                """;
         return new SearchRequest.Builder()
                 .from(from)
                 .size(size)
-                .query(qb -> qb.multiMatch(mmqb -> mmqb.query(input).fields("name", "description")))
+                .query(
+                        qb -> qb.multiMatch(
+                                mmqb -> mmqb.query(input).fields("name", "description")
+                        )
+                )
                 .build();
     }
 
@@ -70,13 +82,21 @@ public class ProductServiceImpl implements ProductService {
         save(Collections.singletonList(product));
     }
 
+    @Override
     public void save(List<Product> products) throws IOException {
+        String comment = """
+                POST <index>/_bulk
+                {"index":{"_id":"0"}}
+                {"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+                {"index":{"_id":"1"}}
+                {"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+                """;
         final BulkResponse response = client.bulk(builder -> {
             for (Product product : products) {
                 builder.index(index)
                        .operations(ob -> {
                            if (product.getId() != null) {
-                               ob.index(ib -> ib.document(product).id(product.getId()));
+                               ob.index(ib -> ib.id(product.getId()).document(product));
                            } else {
                                ob.index(ib -> ib.document(product));
                            }

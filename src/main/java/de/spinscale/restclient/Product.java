@@ -2,6 +2,10 @@ package de.spinscale.restclient;
 
 public class Product {
 
+    /**
+     * if id is null, it will be set to elasticsearch's
+     * default id by {@link #setId(String)} after search
+     */
     private String id;
     private String name;
     private String description;

@@ -1,0 +1,602 @@
+[main] INFO org.testcontainers.utility.ImageNameSubstitutor - Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+[main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy - Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+[main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy - Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+[main] INFO org.testcontainers.DockerClientFactory - Docker host IP address is localhost
+[main] INFO org.testcontainers.DockerClientFactory - Connected to docker: 
+  Server Version: 20.10.20
+  API Version: 1.41
+  Operating System: Docker Desktop
+  Total Memory: 7957 MB
+[main] INFO 🐳 [testcontainers/ryuk:0.3.3] - Creating container for image: testcontainers/ryuk:0.3.3
+[main] INFO org.testcontainers.utility.RegistryAuthLocator - Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+[main] INFO 🐳 [testcontainers/ryuk:0.3.3] - Container testcontainers/ryuk:0.3.3 is starting: 7864f15eca39346748070279e4bcee6b44f92cc804f53829d4c9a83b0f3f9be7
+[main] INFO 🐳 [testcontainers/ryuk:0.3.3] - Container testcontainers/ryuk:0.3.3 started in PT0.9883711S
+[main] INFO org.testcontainers.utility.RyukResourceReaper - Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+[main] INFO org.testcontainers.DockerClientFactory - Checking the system...
+[main] INFO org.testcontainers.DockerClientFactory - ✔︎ Docker server version should be at least 1.6.0
+[main] INFO 🐳 [docker.elastic.co/elasticsearch/elasticsearch:8.3.3] - Starting an elasticsearch container using [docker.elastic.co/elasticsearch/elasticsearch:8.3.3]
+[main] INFO 🐳 [docker.elastic.co/elasticsearch/elasticsearch:8.3.3] - Creating container for image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+[main] INFO org.testcontainers.utility.RegistryAuthLocator - Credential helper/store (docker-credential-desktop) does not have credentials for docker.elastic.co
+[main] INFO 🐳 [docker.elastic.co/elasticsearch/elasticsearch:8.3.3] - Container docker.elastic.co/elasticsearch/elasticsearch:8.3.3 is starting: 1486e9a1db86600ce185e4dad5dde210af9673faa9104e5d192bd2d71c283df6
+[main] INFO 🐳 [docker.elastic.co/elasticsearch/elasticsearch:8.3.3] - Container docker.elastic.co/elasticsearch/elasticsearch:8.3.3 started in PT21.5167833S
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"book-world-records-2020"}}
+{"id":"book-world-records-2020","name":"Guinness book of records 2020","description":"The book of the year!","price":100.0,"stock_available":1}
+{"index":{"_id":"book-world-records-2010"}}
+{"id":"book-world-records-2010","name":"Guinness book of records 2010","description":"The book of the year!","price":80.0,"stock_available":200}
+{"index":{"_id":"book-world-records-1890"}}
+{"id":"book-world-records-1890","name":"Guinness book of records 1890","description":"The book of the year!","price":200.0,"stock_available":0}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 598
+#
+# {"took":419,"errors":false,"items":[{"index":{"_index":"my_index","_id":"book-world-records-2020","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"book-world-records-2010","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"book-world-records-1890","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_refresh'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 49
+#
+# {"_shards":{"total":2,"successful":1,"failed":0}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_search?typed_keys=true' -d '{"query":{"bool":{"filter":[{"range":{"stock_available":{"gt":0}}},{"range":{"price":{"gt":0}}}],"must":[{"multi_match":{"query":"Book"}}],"should":[{"range":{"price":{"lt":100}}}]}}}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 621
+#
+# {"took":91,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":2,"relation":"eq"},"max_score":1.1335313,"hits":[{"_index":"my_index","_id":"book-world-records-2010","_score":1.1335313,"_source":{"id":"book-world-records-2010","name":"Guinness book of records 2010","description":"The book of the year!","price":80.0,"stock_available":200}},{"_index":"my_index","_id":"book-world-records-2020","_score":0.13353139,"_source":{"id":"book-world-records-2020","name":"Guinness book of records 2020","description":"The book of the year!","price":100.0,"stock_available":1}}]}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+{"index":{"_id":"1"}}
+{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+{"index":{"_id":"2"}}
+{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}
+{"index":{"_id":"3"}}
+{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30}
+{"index":{"_id":"4"}}
+{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40}
+{"index":{"_id":"5"}}
+{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50}
+{"index":{"_id":"6"}}
+{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60}
+{"index":{"_id":"7"}}
+{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70}
+{"index":{"_id":"8"}}
+{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80}
+{"index":{"_id":"9"}}
+{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}
+{"index":{"_id":"10"}}
+{"id":"10","name":"Name of 10 product","description":"Description of 10 product","price":12.0,"stock_available":100}
+{"index":{"_id":"11"}}
+{"id":"11","name":"Name of 11 product","description":"Description of 11 product","price":13.2,"stock_available":110}
+{"index":{"_id":"12"}}
+{"id":"12","name":"Name of 12 product","description":"Description of 12 product","price":14.399999999999999,"stock_available":120}
+{"index":{"_id":"13"}}
+{"id":"13","name":"Name of 13 product","description":"Description of 13 product","price":15.6,"stock_available":130}
+{"index":{"_id":"14"}}
+{"id":"14","name":"Name of 14 product","description":"Description of 14 product","price":16.8,"stock_available":140}
+{"index":{"_id":"15"}}
+{"id":"15","name":"Name of 15 product","description":"Description of 15 product","price":18.0,"stock_available":150}
+{"index":{"_id":"16"}}
+{"id":"16","name":"Name of 16 product","description":"Description of 16 product","price":19.2,"stock_available":160}
+{"index":{"_id":"17"}}
+{"id":"17","name":"Name of 17 product","description":"Description of 17 product","price":20.4,"stock_available":170}
+{"index":{"_id":"18"}}
+{"id":"18","name":"Name of 18 product","description":"Description of 18 product","price":21.599999999999998,"stock_available":180}
+{"index":{"_id":"19"}}
+{"id":"19","name":"Name of 19 product","description":"Description of 19 product","price":22.8,"stock_available":190}
+{"index":{"_id":"20"}}
+{"id":"20","name":"Name of 20 product","description":"Description of 20 product","price":24.0,"stock_available":200}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 3524
+#
+# {"took":256,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"2","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"4","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":4,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"5","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":5,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"6","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":6,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"7","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":7,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"8","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":8,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"9","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":9,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"10","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":10,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"11","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":11,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"12","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":12,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"13","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":13,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"14","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":14,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"15","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":15,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"16","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":16,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"17","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":17,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"18","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":18,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"19","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":19,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"20","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":20,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_refresh'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 49
+#
+# {"_shards":{"total":2,"successful":1,"failed":0}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_search?typed_keys=true' -d '{"query":{"match":{"name":{"query":"Name"}}},"sort":[{"price":{"order":"desc"}}]}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 2069
+#
+# {"took":12,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":21,"relation":"eq"},"max_score":null,"hits":[{"_index":"my_index","_id":"20","_score":null,"_source":{"id":"20","name":"Name of 20 product","description":"Description of 20 product","price":24.0,"stock_available":200},"sort":[24.0]},{"_index":"my_index","_id":"19","_score":null,"_source":{"id":"19","name":"Name of 19 product","description":"Description of 19 product","price":22.8,"stock_available":190},"sort":[22.8]},{"_index":"my_index","_id":"18","_score":null,"_source":{"id":"18","name":"Name of 18 product","description":"Description of 18 product","price":21.599999999999998,"stock_available":180},"sort":[21.6]},{"_index":"my_index","_id":"17","_score":null,"_source":{"id":"17","name":"Name of 17 product","description":"Description of 17 product","price":20.4,"stock_available":170},"sort":[20.4]},{"_index":"my_index","_id":"16","_score":null,"_source":{"id":"16","name":"Name of 16 product","description":"Description of 16 product","price":19.2,"stock_available":160},"sort":[19.2]},{"_index":"my_index","_id":"15","_score":null,"_source":{"id":"15","name":"Name of 15 product","description":"Description of 15 product","price":18.0,"stock_available":150},"sort":[18.0]},{"_index":"my_index","_id":"14","_score":null,"_source":{"id":"14","name":"Name of 14 product","description":"Description of 14 product","price":16.8,"stock_available":140},"sort":[16.8]},{"_index":"my_index","_id":"13","_score":null,"_source":{"id":"13","name":"Name of 13 product","description":"Description of 13 product","price":15.6,"stock_available":130},"sort":[15.6]},{"_index":"my_index","_id":"12","_score":null,"_source":{"id":"12","name":"Name of 12 product","description":"Description of 12 product","price":14.399999999999999,"stock_available":120},"sort":[14.4]},{"_index":"my_index","_id":"11","_score":null,"_source":{"id":"11","name":"Name of 11 product","description":"Description of 11 product","price":13.2,"stock_available":110},"sort":[13.2]}]}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_search?typed_keys=true' -d '{"query":{"match":{"name":{"query":"Name"}}},"search_after":["13.2"],"sort":[{"price":{"order":"desc"}}]}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 2022
+#
+# {"took":4,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":21,"relation":"eq"},"max_score":null,"hits":[{"_index":"my_index","_id":"10","_score":null,"_source":{"id":"10","name":"Name of 10 product","description":"Description of 10 product","price":12.0,"stock_available":100},"sort":[12.0]},{"_index":"my_index","_id":"9","_score":null,"_source":{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90},"sort":[10.8]},{"_index":"my_index","_id":"8","_score":null,"_source":{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80},"sort":[9.6]},{"_index":"my_index","_id":"7","_score":null,"_source":{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70},"sort":[8.4]},{"_index":"my_index","_id":"6","_score":null,"_source":{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60},"sort":[7.2]},{"_index":"my_index","_id":"5","_score":null,"_source":{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50},"sort":[6.0]},{"_index":"my_index","_id":"4","_score":null,"_source":{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40},"sort":[4.8]},{"_index":"my_index","_id":"3","_score":null,"_source":{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30},"sort":[3.6]},{"_index":"my_index","_id":"2","_score":null,"_source":{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20},"sort":[2.4]},{"_index":"my_index","_id":"1","_score":null,"_source":{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10},"sort":[1.2]}]}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+{"index":{"_id":"1"}}
+{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+{"index":{"_id":"2"}}
+{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 532
+#
+# {"took":158,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"2","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX GET 'https://localhost:6460/my_index/_doc/0'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 208
+#
+# {"_index":"my_index","_id":"0","_version":1,"_seq_no":0,"_primary_term":1,"found":true,"_source":{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}}
+[main] TRACE tracer - curl -iX GET 'https://localhost:6460/my_index/_doc/1'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 209
+#
+# {"_index":"my_index","_id":"1","_version":1,"_seq_no":1,"_primary_term":1,"found":true,"_source":{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}}
+[main] TRACE tracer - curl -iX GET 'https://localhost:6460/my_index/_doc/2'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 209
+#
+# {"_index":"my_index","_id":"2","_version":1,"_seq_no":2,"_primary_term":1,"found":true,"_source":{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 202
+#
+# {"took":147,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX GET 'https://localhost:6460/_cluster/health'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 390
+#
+# {"cluster_name":"docker-cluster","status":"yellow","timed_out":false,"number_of_nodes":1,"number_of_data_nodes":1,"active_primary_shards":1,"active_shards":1,"relocating_shards":0,"initializing_shards":0,"unassigned_shards":1,"delayed_unassigned_shards":0,"number_of_pending_tasks":0,"number_of_in_flight_fetch":0,"task_max_waiting_in_queue_millis":0,"active_shards_percent_as_number":50.0}
+[I/O dispatcher 1] TRACE tracer - curl -iX GET 'https://localhost:6460/_cluster/health'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 390
+#
+# {"cluster_name":"docker-cluster","status":"yellow","timed_out":false,"number_of_nodes":1,"number_of_data_nodes":1,"active_primary_shards":1,"active_shards":1,"relocating_shards":0,"initializing_shards":0,"unassigned_shards":1,"delayed_unassigned_shards":0,"number_of_pending_tasks":0,"number_of_in_flight_fetch":0,"task_max_waiting_in_queue_millis":0,"active_shards_percent_as_number":50.0}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+{"index":{"_id":"1"}}
+{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+{"index":{"_id":"2"}}
+{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}
+{"index":{"_id":"3"}}
+{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30}
+{"index":{"_id":"4"}}
+{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40}
+{"index":{"_id":"5"}}
+{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50}
+{"index":{"_id":"6"}}
+{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60}
+{"index":{"_id":"7"}}
+{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70}
+{"index":{"_id":"8"}}
+{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80}
+{"index":{"_id":"9"}}
+{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}
+{"index":{"_id":"10"}}
+{"id":"10","name":"Name of 10 product","description":"Description of 10 product","price":12.0,"stock_available":100}
+{"index":{"_id":"11"}}
+{"id":"11","name":"Name of 11 product","description":"Description of 11 product","price":13.2,"stock_available":110}
+{"index":{"_id":"12"}}
+{"id":"12","name":"Name of 12 product","description":"Description of 12 product","price":14.399999999999999,"stock_available":120}
+{"index":{"_id":"13"}}
+{"id":"13","name":"Name of 13 product","description":"Description of 13 product","price":15.6,"stock_available":130}
+{"index":{"_id":"14"}}
+{"id":"14","name":"Name of 14 product","description":"Description of 14 product","price":16.8,"stock_available":140}
+{"index":{"_id":"15"}}
+{"id":"15","name":"Name of 15 product","description":"Description of 15 product","price":18.0,"stock_available":150}
+{"index":{"_id":"16"}}
+{"id":"16","name":"Name of 16 product","description":"Description of 16 product","price":19.2,"stock_available":160}
+{"index":{"_id":"17"}}
+{"id":"17","name":"Name of 17 product","description":"Description of 17 product","price":20.4,"stock_available":170}
+{"index":{"_id":"18"}}
+{"id":"18","name":"Name of 18 product","description":"Description of 18 product","price":21.599999999999998,"stock_available":180}
+{"index":{"_id":"19"}}
+{"id":"19","name":"Name of 19 product","description":"Description of 19 product","price":22.8,"stock_available":190}
+{"index":{"_id":"20"}}
+{"id":"20","name":"Name of 20 product","description":"Description of 20 product","price":24.0,"stock_available":200}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 3524
+#
+# {"took":159,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"2","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"4","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":4,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"5","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":5,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"6","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":6,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"7","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":7,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"8","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":8,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"9","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":9,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"10","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":10,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"11","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":11,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"12","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":12,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"13","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":13,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"14","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":14,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"15","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":15,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"16","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":16,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"17","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":17,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"18","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":18,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"19","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":19,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"20","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":20,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_refresh'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 49
+#
+# {"_shards":{"total":2,"successful":1,"failed":0}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/_search?typed_keys=true' -d '{"from":0,"query":{"multi_match":{"fields":["name","description"],"query":"name"}},"size":10}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 1960
+#
+# {"took":2,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":21,"relation":"eq"},"max_score":0.022989519,"hits":[{"_index":"my_index","_id":"0","_score":0.022989519,"_source":{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}},{"_index":"my_index","_id":"1","_score":0.022989519,"_source":{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}},{"_index":"my_index","_id":"2","_score":0.022989519,"_source":{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}},{"_index":"my_index","_id":"3","_score":0.022989519,"_source":{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30}},{"_index":"my_index","_id":"4","_score":0.022989519,"_source":{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40}},{"_index":"my_index","_id":"5","_score":0.022989519,"_source":{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50}},{"_index":"my_index","_id":"6","_score":0.022989519,"_source":{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60}},{"_index":"my_index","_id":"7","_score":0.022989519,"_source":{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70}},{"_index":"my_index","_id":"8","_score":0.022989519,"_source":{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80}},{"_index":"my_index","_id":"9","_score":0.022989519,"_source":{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}}]}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/_search?typed_keys=true' -d '{"from":10,"query":{"multi_match":{"fields":["name","description"],"query":"name"}},"size":10}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 2005
+#
+# {"took":2,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":21,"relation":"eq"},"max_score":0.022989519,"hits":[{"_index":"my_index","_id":"10","_score":0.022989519,"_source":{"id":"10","name":"Name of 10 product","description":"Description of 10 product","price":12.0,"stock_available":100}},{"_index":"my_index","_id":"11","_score":0.022989519,"_source":{"id":"11","name":"Name of 11 product","description":"Description of 11 product","price":13.2,"stock_available":110}},{"_index":"my_index","_id":"12","_score":0.022989519,"_source":{"id":"12","name":"Name of 12 product","description":"Description of 12 product","price":14.399999999999999,"stock_available":120}},{"_index":"my_index","_id":"13","_score":0.022989519,"_source":{"id":"13","name":"Name of 13 product","description":"Description of 13 product","price":15.6,"stock_available":130}},{"_index":"my_index","_id":"14","_score":0.022989519,"_source":{"id":"14","name":"Name of 14 product","description":"Description of 14 product","price":16.8,"stock_available":140}},{"_index":"my_index","_id":"15","_score":0.022989519,"_source":{"id":"15","name":"Name of 15 product","description":"Description of 15 product","price":18.0,"stock_available":150}},{"_index":"my_index","_id":"16","_score":0.022989519,"_source":{"id":"16","name":"Name of 16 product","description":"Description of 16 product","price":19.2,"stock_available":160}},{"_index":"my_index","_id":"17","_score":0.022989519,"_source":{"id":"17","name":"Name of 17 product","description":"Description of 17 product","price":20.4,"stock_available":170}},{"_index":"my_index","_id":"18","_score":0.022989519,"_source":{"id":"18","name":"Name of 18 product","description":"Description of 18 product","price":21.599999999999998,"stock_available":180}},{"_index":"my_index","_id":"19","_score":0.022989519,"_source":{"id":"19","name":"Name of 19 product","description":"Description of 19 product","price":22.8,"stock_available":190}}]}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/_search?typed_keys=true' -d '{"from":20,"query":{"multi_match":{"fields":["name","description"],"query":"name"}},"size":10}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 348
+#
+# {"took":1,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":21,"relation":"eq"},"max_score":0.022989519,"hits":[{"_index":"my_index","_id":"20","_score":0.022989519,"_source":{"id":"20","name":"Name of 20 product","description":"Description of 20 product","price":24.0,"stock_available":200}}]}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 202
+#
+# {"took":154,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX GET 'https://localhost:6460/my_index/_doc/0'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 208
+#
+# {"_index":"my_index","_id":"0","_version":1,"_seq_no":0,"_primary_term":1,"found":true,"_source":{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+{"index":{"_id":"1"}}
+{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+{"index":{"_id":"2"}}
+{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}
+{"index":{"_id":"3"}}
+{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30}
+{"index":{"_id":"4"}}
+{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40}
+{"index":{"_id":"5"}}
+{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50}
+{"index":{"_id":"6"}}
+{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60}
+{"index":{"_id":"7"}}
+{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70}
+{"index":{"_id":"8"}}
+{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80}
+{"index":{"_id":"9"}}
+{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}
+{"index":{"_id":"10"}}
+{"id":"10","name":"Name of 10 product","description":"Description of 10 product","price":12.0,"stock_available":100}
+{"index":{"_id":"11"}}
+{"id":"11","name":"Name of 11 product","description":"Description of 11 product","price":13.2,"stock_available":110}
+{"index":{"_id":"12"}}
+{"id":"12","name":"Name of 12 product","description":"Description of 12 product","price":14.399999999999999,"stock_available":120}
+{"index":{"_id":"13"}}
+{"id":"13","name":"Name of 13 product","description":"Description of 13 product","price":15.6,"stock_available":130}
+{"index":{"_id":"14"}}
+{"id":"14","name":"Name of 14 product","description":"Description of 14 product","price":16.8,"stock_available":140}
+{"index":{"_id":"15"}}
+{"id":"15","name":"Name of 15 product","description":"Description of 15 product","price":18.0,"stock_available":150}
+{"index":{"_id":"16"}}
+{"id":"16","name":"Name of 16 product","description":"Description of 16 product","price":19.2,"stock_available":160}
+{"index":{"_id":"17"}}
+{"id":"17","name":"Name of 17 product","description":"Description of 17 product","price":20.4,"stock_available":170}
+{"index":{"_id":"18"}}
+{"id":"18","name":"Name of 18 product","description":"Description of 18 product","price":21.599999999999998,"stock_available":180}
+{"index":{"_id":"19"}}
+{"id":"19","name":"Name of 19 product","description":"Description of 19 product","price":22.8,"stock_available":190}
+{"index":{"_id":"20"}}
+{"id":"20","name":"Name of 20 product","description":"Description of 20 product","price":24.0,"stock_available":200}
+{"index":{"_id":"21"}}
+{"id":"21","name":"Name of 21 product","description":"Description of 21 product","price":25.2,"stock_available":210}
+{"index":{"_id":"22"}}
+{"id":"22","name":"Name of 22 product","description":"Description of 22 product","price":26.4,"stock_available":220}
+{"index":{"_id":"23"}}
+{"id":"23","name":"Name of 23 product","description":"Description of 23 product","price":27.599999999999998,"stock_available":230}
+{"index":{"_id":"24"}}
+{"id":"24","name":"Name of 24 product","description":"Description of 24 product","price":28.799999999999997,"stock_available":240}
+{"index":{"_id":"25"}}
+{"id":"25","name":"Name of 25 product","description":"Description of 25 product","price":30.0,"stock_available":250}
+{"index":{"_id":"26"}}
+{"id":"26","name":"Name of 26 product","description":"Description of 26 product","price":31.2,"stock_available":260}
+{"index":{"_id":"27"}}
+{"id":"27","name":"Name of 27 product","description":"Description of 27 product","price":32.4,"stock_available":270}
+{"index":{"_id":"28"}}
+{"id":"28","name":"Name of 28 product","description":"Description of 28 product","price":33.6,"stock_available":280}
+{"index":{"_id":"29"}}
+{"id":"29","name":"Name of 29 product","description":"Description of 29 product","price":34.8,"stock_available":290}
+{"index":{"_id":"30"}}
+{"id":"30","name":"Name of 30 product","description":"Description of 30 product","price":36.0,"stock_available":300}
+{"index":{"_id":"31"}}
+{"id":"31","name":"Name of 31 product","description":"Description of 31 product","price":37.199999999999996,"stock_available":310}
+{"index":{"_id":"32"}}
+{"id":"32","name":"Name of 32 product","description":"Description of 32 product","price":38.4,"stock_available":320}
+{"index":{"_id":"33"}}
+{"id":"33","name":"Name of 33 product","description":"Description of 33 product","price":39.6,"stock_available":330}
+{"index":{"_id":"34"}}
+{"id":"34","name":"Name of 34 product","description":"Description of 34 product","price":40.8,"stock_available":340}
+{"index":{"_id":"35"}}
+{"id":"35","name":"Name of 35 product","description":"Description of 35 product","price":42.0,"stock_available":350}
+{"index":{"_id":"36"}}
+{"id":"36","name":"Name of 36 product","description":"Description of 36 product","price":43.199999999999996,"stock_available":360}
+{"index":{"_id":"37"}}
+{"id":"37","name":"Name of 37 product","description":"Description of 37 product","price":44.4,"stock_available":370}
+{"index":{"_id":"38"}}
+{"id":"38","name":"Name of 38 product","description":"Description of 38 product","price":45.6,"stock_available":380}
+{"index":{"_id":"39"}}
+{"id":"39","name":"Name of 39 product","description":"Description of 39 product","price":46.8,"stock_available":390}
+{"index":{"_id":"40"}}
+{"id":"40","name":"Name of 40 product","description":"Description of 40 product","price":48.0,"stock_available":400}
+{"index":{"_id":"41"}}
+{"id":"41","name":"Name of 41 product","description":"Description of 41 product","price":49.199999999999996,"stock_available":410}
+{"index":{"_id":"42"}}
+{"id":"42","name":"Name of 42 product","description":"Description of 42 product","price":50.4,"stock_available":420}
+{"index":{"_id":"43"}}
+{"id":"43","name":"Name of 43 product","description":"Description of 43 product","price":51.6,"stock_available":430}
+{"index":{"_id":"44"}}
+{"id":"44","name":"Name of 44 product","description":"Description of 44 product","price":52.8,"stock_available":440}
+{"index":{"_id":"45"}}
+{"id":"45","name":"Name of 45 product","description":"Description of 45 product","price":54.0,"stock_available":450}
+{"index":{"_id":"46"}}
+{"id":"46","name":"Name of 46 product","description":"Description of 46 product","price":55.199999999999996,"stock_available":460}
+{"index":{"_id":"47"}}
+{"id":"47","name":"Name of 47 product","description":"Description of 47 product","price":56.4,"stock_available":470}
+{"index":{"_id":"48"}}
+{"id":"48","name":"Name of 48 product","description":"Description of 48 product","price":57.599999999999994,"stock_available":480}
+{"index":{"_id":"49"}}
+{"id":"49","name":"Name of 49 product","description":"Description of 49 product","price":58.8,"stock_available":490}
+{"index":{"_id":"50"}}
+{"id":"50","name":"Name of 50 product","description":"Description of 50 product","price":60.0,"stock_available":500}
+{"index":{"_id":"51"}}
+{"id":"51","name":"Name of 51 product","description":"Description of 51 product","price":61.199999999999996,"stock_available":510}
+{"index":{"_id":"52"}}
+{"id":"52","name":"Name of 52 product","description":"Description of 52 product","price":62.4,"stock_available":520}
+{"index":{"_id":"53"}}
+{"id":"53","name":"Name of 53 product","description":"Description of 53 product","price":63.599999999999994,"stock_available":530}
+{"index":{"_id":"54"}}
+{"id":"54","name":"Name of 54 product","description":"Description of 54 product","price":64.8,"stock_available":540}
+{"index":{"_id":"55"}}
+{"id":"55","name":"Name of 55 product","description":"Description of 55 product","price":66.0,"stock_available":550}
+{"index":{"_id":"56"}}
+{"id":"56","name":"Name of 56 product","description":"Description of 56 product","price":67.2,"stock_available":560}
+{"index":{"_id":"57"}}
+{"id":"57","name":"Name of 57 product","description":"Description of 57 product","price":68.39999999999999,"stock_available":570}
+{"index":{"_id":"58"}}
+{"id":"58","name":"Name of 58 product","description":"Description of 58 product","price":69.6,"stock_available":580}
+{"index":{"_id":"59"}}
+{"id":"59","name":"Name of 59 product","description":"Description of 59 product","price":70.8,"stock_available":590}
+{"index":{"_id":"60"}}
+{"id":"60","name":"Name of 60 product","description":"Description of 60 product","price":72.0,"stock_available":600}
+{"index":{"_id":"61"}}
+{"id":"61","name":"Name of 61 product","description":"Description of 61 product","price":73.2,"stock_available":610}
+{"index":{"_id":"62"}}
+{"id":"62","name":"Name of 62 product","description":"Description of 62 product","price":74.39999999999999,"stock_available":620}
+{"index":{"_id":"63"}}
+{"id":"63","name":"Name of 63 product","description":"Description of 63 product","price":75.6,"stock_available":630}
+{"index":{"_id":"64"}}
+{"id":"64","name":"Name of 64 product","description":"Description of 64 product","price":76.8,"stock_available":640}
+{"index":{"_id":"65"}}
+{"id":"65","name":"Name of 65 product","description":"Description of 65 product","price":78.0,"stock_available":650}
+{"index":{"_id":"66"}}
+{"id":"66","name":"Name of 66 product","description":"Description of 66 product","price":79.2,"stock_available":660}
+{"index":{"_id":"67"}}
+{"id":"67","name":"Name of 67 product","description":"Description of 67 product","price":80.39999999999999,"stock_available":670}
+{"index":{"_id":"68"}}
+{"id":"68","name":"Name of 68 product","description":"Description of 68 product","price":81.6,"stock_available":680}
+{"index":{"_id":"69"}}
+{"id":"69","name":"Name of 69 product","description":"Description of 69 product","price":82.8,"stock_available":690}
+{"index":{"_id":"70"}}
+{"id":"70","name":"Name of 70 product","description":"Description of 70 product","price":84.0,"stock_available":700}
+{"index":{"_id":"71"}}
+{"id":"71","name":"Name of 71 product","description":"Description of 71 product","price":85.2,"stock_available":710}
+{"index":{"_id":"72"}}
+{"id":"72","name":"Name of 72 product","description":"Description of 72 product","price":86.39999999999999,"stock_available":720}
+{"index":{"_id":"73"}}
+{"id":"73","name":"Name of 73 product","description":"Description of 73 product","price":87.6,"stock_available":730}
+{"index":{"_id":"74"}}
+{"id":"74","name":"Name of 74 product","description":"Description of 74 product","price":88.8,"stock_available":740}
+{"index":{"_id":"75"}}
+{"id":"75","name":"Name of 75 product","description":"Description of 75 product","price":90.0,"stock_available":750}
+{"index":{"_id":"76"}}
+{"id":"76","name":"Name of 76 product","description":"Description of 76 product","price":91.2,"stock_available":760}
+{"index":{"_id":"77"}}
+{"id":"77","name":"Name of 77 product","description":"Description of 77 product","price":92.39999999999999,"stock_available":770}
+{"index":{"_id":"78"}}
+{"id":"78","name":"Name of 78 product","description":"Description of 78 product","price":93.6,"stock_available":780}
+{"index":{"_id":"79"}}
+{"id":"79","name":"Name of 79 product","description":"Description of 79 product","price":94.8,"stock_available":790}
+{"index":{"_id":"80"}}
+{"id":"80","name":"Name of 80 product","description":"Description of 80 product","price":96.0,"stock_available":800}
+{"index":{"_id":"81"}}
+{"id":"81","name":"Name of 81 product","description":"Description of 81 product","price":97.2,"stock_available":810}
+{"index":{"_id":"82"}}
+{"id":"82","name":"Name of 82 product","description":"Description of 82 product","price":98.39999999999999,"stock_available":820}
+{"index":{"_id":"83"}}
+{"id":"83","name":"Name of 83 product","description":"Description of 83 product","price":99.6,"stock_available":830}
+{"index":{"_id":"84"}}
+{"id":"84","name":"Name of 84 product","description":"Description of 84 product","price":100.8,"stock_available":840}
+{"index":{"_id":"85"}}
+{"id":"85","name":"Name of 85 product","description":"Description of 85 product","price":102.0,"stock_available":850}
+{"index":{"_id":"86"}}
+{"id":"86","name":"Name of 86 product","description":"Description of 86 product","price":103.2,"stock_available":860}
+{"index":{"_id":"87"}}
+{"id":"87","name":"Name of 87 product","description":"Description of 87 product","price":104.39999999999999,"stock_available":870}
+{"index":{"_id":"88"}}
+{"id":"88","name":"Name of 88 product","description":"Description of 88 product","price":105.6,"stock_available":880}
+{"index":{"_id":"89"}}
+{"id":"89","name":"Name of 89 product","description":"Description of 89 product","price":106.8,"stock_available":890}
+{"index":{"_id":"90"}}
+{"id":"90","name":"Name of 90 product","description":"Description of 90 product","price":108.0,"stock_available":900}
+{"index":{"_id":"91"}}
+{"id":"91","name":"Name of 91 product","description":"Description of 91 product","price":109.2,"stock_available":910}
+{"index":{"_id":"92"}}
+{"id":"92","name":"Name of 92 product","description":"Description of 92 product","price":110.39999999999999,"stock_available":920}
+{"index":{"_id":"93"}}
+{"id":"93","name":"Name of 93 product","description":"Description of 93 product","price":111.6,"stock_available":930}
+{"index":{"_id":"94"}}
+{"id":"94","name":"Name of 94 product","description":"Description of 94 product","price":112.8,"stock_available":940}
+{"index":{"_id":"95"}}
+{"id":"95","name":"Name of 95 product","description":"Description of 95 product","price":114.0,"stock_available":950}
+{"index":{"_id":"96"}}
+{"id":"96","name":"Name of 96 product","description":"Description of 96 product","price":115.19999999999999,"stock_available":960}
+{"index":{"_id":"97"}}
+{"id":"97","name":"Name of 97 product","description":"Description of 97 product","price":116.39999999999999,"stock_available":970}
+{"index":{"_id":"98"}}
+{"id":"98","name":"Name of 98 product","description":"Description of 98 product","price":117.6,"stock_available":980}
+{"index":{"_id":"99"}}
+{"id":"99","name":"Name of 99 product","description":"Description of 99 product","price":118.8,"stock_available":990}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 16717
+#
+# {"took":189,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"2","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"4","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":4,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"5","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":5,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"6","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":6,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"7","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":7,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"8","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":8,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"9","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":9,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"10","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":10,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"11","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":11,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"12","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":12,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"13","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":13,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"14","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":14,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"15","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":15,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"16","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":16,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"17","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":17,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"18","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":18,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"19","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":19,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"20","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":20,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"21","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":21,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"22","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":22,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"23","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":23,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"24","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":24,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"25","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":25,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"26","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":26,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"27","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":27,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"28","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":28,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"29","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":29,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"30","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":30,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"31","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":31,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"32","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":32,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"33","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":33,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"34","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":34,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"35","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":35,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"36","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":36,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"37","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":37,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"38","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":38,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"39","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":39,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"40","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":40,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"41","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":41,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"42","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":42,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"43","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":43,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"44","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":44,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"45","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":45,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"46","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":46,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"47","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":47,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"48","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":48,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"49","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":49,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"50","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":50,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"51","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":51,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"52","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":52,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"53","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":53,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"54","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":54,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"55","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":55,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"56","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":56,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"57","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":57,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"58","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":58,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"59","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":59,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"60","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":60,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"61","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":61,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"62","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":62,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"63","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":63,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"64","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":64,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"65","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":65,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"66","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":66,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"67","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":67,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"68","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":68,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"69","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":69,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"70","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":70,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"71","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":71,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"72","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":72,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"73","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":73,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"74","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":74,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"75","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":75,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"76","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":76,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"77","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":77,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"78","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":78,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"79","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":79,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"80","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":80,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"81","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":81,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"82","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":82,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"83","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":83,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"84","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":84,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"85","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":85,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"86","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":86,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"87","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":87,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"88","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":88,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"89","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":89,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"90","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":90,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"91","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":91,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"92","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":92,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"93","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":93,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"94","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":94,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"95","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":95,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"96","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":96,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"97","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":97,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"98","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":98,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"99","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":99,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_refresh'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 49
+#
+# {"_shards":{"total":2,"successful":1,"failed":0}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_search?typed_keys=true' -d '{"aggregations":{"price_histo":{"aggregations":{"stock_average":{"avg":{"field":"stock_available"}}},"histogram":{"field":"price","interval":10.0}}},"size":0}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 974
+#
+# {"took":30,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":100,"relation":"eq"},"max_score":null,"hits":[]},"aggregations":{"histogram#price_histo":{"buckets":[{"key":0.0,"doc_count":9,"avg#stock_average":{"value":40.0}},{"key":10.0,"doc_count":8,"avg#stock_average":{"value":125.0}},{"key":20.0,"doc_count":8,"avg#stock_average":{"value":205.0}},{"key":30.0,"doc_count":9,"avg#stock_average":{"value":290.0}},{"key":40.0,"doc_count":8,"avg#stock_average":{"value":375.0}},{"key":50.0,"doc_count":8,"avg#stock_average":{"value":455.0}},{"key":60.0,"doc_count":9,"avg#stock_average":{"value":540.0}},{"key":70.0,"doc_count":8,"avg#stock_average":{"value":625.0}},{"key":80.0,"doc_count":8,"avg#stock_average":{"value":705.0}},{"key":90.0,"doc_count":9,"avg#stock_average":{"value":790.0}},{"key":100.0,"doc_count":8,"avg#stock_average":{"value":875.0}},{"key":110.0,"doc_count":8,"avg#stock_average":{"value":955.0}}]}}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{"_id":"0"}}
+{"id":"0","name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+{"index":{"_id":"1"}}
+{"id":"1","name":"Name of 1 product","description":"Description of 1 product","price":1.2,"stock_available":10}
+{"index":{"_id":"2"}}
+{"id":"2","name":"Name of 2 product","description":"Description of 2 product","price":2.4,"stock_available":20}
+{"index":{"_id":"3"}}
+{"id":"3","name":"Name of 3 product","description":"Description of 3 product","price":3.5999999999999996,"stock_available":30}
+{"index":{"_id":"4"}}
+{"id":"4","name":"Name of 4 product","description":"Description of 4 product","price":4.8,"stock_available":40}
+{"index":{"_id":"5"}}
+{"id":"5","name":"Name of 5 product","description":"Description of 5 product","price":6.0,"stock_available":50}
+{"index":{"_id":"6"}}
+{"id":"6","name":"Name of 6 product","description":"Description of 6 product","price":7.199999999999999,"stock_available":60}
+{"index":{"_id":"7"}}
+{"id":"7","name":"Name of 7 product","description":"Description of 7 product","price":8.4,"stock_available":70}
+{"index":{"_id":"8"}}
+{"id":"8","name":"Name of 8 product","description":"Description of 8 product","price":9.6,"stock_available":80}
+{"index":{"_id":"9"}}
+{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 1687
+#
+# {"took":193,"errors":false,"items":[{"index":{"_index":"my_index","_id":"0","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":1,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"2","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"4","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":4,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"5","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":5,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"6","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":6,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"7","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":7,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"8","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":8,"_primary_term":1,"status":201}},{"index":{"_index":"my_index","_id":"9","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":9,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_refresh'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 49
+#
+# {"_shards":{"total":2,"successful":1,"failed":0}}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/_search?typed_keys=true' -d '{"from":0,"query":{"multi_match":{"fields":["name","description"],"query":"9"}},"size":10}'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 352
+#
+# {"took":2,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":1,"relation":"eq"},"max_score":1.9924302,"hits":[{"_index":"my_index","_id":"9","_score":1.9924302,"_source":{"id":"9","name":"Name of 9 product","description":"Description of 9 product","price":10.799999999999999,"stock_available":90}}]}}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}
+[main] TRACE tracer - curl -iX POST 'https://localhost:6460/my_index/_bulk' -d '{"index":{}}
+{"name":"Name of 0 product","description":"Description of 0 product","price":0.0,"stock_available":0}
+'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 221
+#
+# {"took":225,"errors":false,"items":[{"index":{"_index":"my_index","_id":"WjxLNIQBF6K2M5Zn78r9","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1,"status":201}}]}
+[main] TRACE tracer - curl -iX DELETE 'https://localhost:6460/my_index'
+# HTTP/1.1 200 OK
+# X-elastic-product: Elasticsearch
+# content-type: application/vnd.elasticsearch+json;compatible-with=8
+# content-length: 21
+#
+# {"acknowledged":true}

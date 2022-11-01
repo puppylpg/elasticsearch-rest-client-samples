@@ -5,6 +5,8 @@ client](https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/cur
 It is using Testcontainers for Elasticsearch, so you need to have Docker
 up and running.
 
+Example logs can be found in [example_log](./example_log) for better understanding.
+
 You can run the tests via `./gradlew clean check`, but I suppose just reading
 the source in an IDE is more interesting.
 
